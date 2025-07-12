@@ -1,7 +1,7 @@
 ﻿Imports System.Data.SqlClient
 Public Class DatabaseHelper
      Private ReadOnly connectionString As String = ConfigurationManager.ConnectionStrings("II-46ConnectionString").ConnectionString
-    Public Function CreateEmpleado(Empresa As Persona) As String
+    Public Function CreateEmpresa(Empresa As Persona) As String
         Try
             Dim fechaDate As Date = Date.Now
 
@@ -19,7 +19,7 @@ Public Class DatabaseHelper
                     command.ExecuteNonQuery()
                 End Using
             End Using
-            Return "Persona creada exitosamente."
+            Return "Proveedor creada exitosamente."
         Catch ex As FormatException
             Return "Formato de fecha inválido. Por favor, use el formato 'dd/MM/yyyy'."
         Catch ex As Exception
@@ -39,22 +39,22 @@ Public Class DatabaseHelper
                     connection.Open()
                     Dim rowsAffected As Integer = command.ExecuteNonQuery()
                     If rowsAffected = 0 Then
-                        Return "No se encontró el empleado con el ID especificado."
+                        Return "No se encontró la empresa con el ID especificado."
                     End If
                 End Using
             End Using
-            Return "Persona eliminada exitosamente."
+            Return "Proveedor eliminada exitosamente."
         Catch ex As Exception
             Return "Error al eliminar el empleado: " & ex.Message
         End Try
     End Function
 
-    Friend Function UpdateEmpleado(id As String, Empresa As Persona) As String
+    Friend Function UpdateEmpresa(id As String, Empresa As Persona) As String
         Try
             Dim query As String = "UPDATE Proveedores SET NombreEmpresa = @NombreEmpresa,
                 Contacto = @Contacto, Telefono = @Telefono, WHERE ProveedorId = @Id"
             Dim parameters As New List(Of SqlParameter) From {
-                New SqlParameter("@ProveedorId", id),
+                New SqlParameter("@Id", id),
                  New SqlParameter("@NombreEmpresa", Empresa.NombreEmpresa),
                 New SqlParameter("@Contacto", Empresa.Contacto),
                 New SqlParameter("@Telefono", Empresa.Telefono)
@@ -66,7 +66,7 @@ Public Class DatabaseHelper
                     command.ExecuteNonQuery()
                 End Using
             End Using
-            Return "Empleado actualizado exitosamente."
+            Return "Proveedor actualizado exitosamente."
         Catch ex As Exception
             Return "Error al actualizar el empleado: " & ex.Message
         End Try

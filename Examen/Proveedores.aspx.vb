@@ -16,9 +16,10 @@ Public Class Formulario
             empresa.Contacto = TxtContacto.Text
             empresa.Telefono = TxtTelefono.Text
             Dim dbHelper As New DatabaseHelper()
-            Dim resultado As String = dbHelper.CreateEmpleado(empresa)
+        Dim resultado As String = dbHelper.CreateEmpresa(empresa)
         If resultado.Contains("exitosamente") Then
             LblMensaje.Text = "Proveedor creado exitosamente."
+            GridView1.DataBind()
             LblMensaje.ForeColor = System.Drawing.Color.Green
         Else
             LblMensaje.Text = "Error al crear el proveedor: " & resultado
@@ -34,12 +35,16 @@ Public Class Formulario
         empresa.Contacto = TxtContacto.Text
         empresa.Telefono = TxtTelefono.Text
         Dim dbHelper As New DatabaseHelper()
-        Dim resultado As String = dbHelper.UpdateEmpleado(ProveedorId.ToString(), empresa)
+
+        Dim id As Integer = Convert.ToInt32(GridView1.DataKeys(e.AffectedRows).Value)
+        Dim resultado As String = dbHelper.UpdateEmpresa(id.ToString(), empresa)
         If resultado.Contains("exitosamente") Then
             LblMensaje.Text = "Proveedor actualizado exitosamente."
+            GridView1.DataBind()
             LblMensaje.ForeColor = System.Drawing.Color.Green
         Else
             LblMensaje.Text = "Error al actualizar el proveedor: " & resultado
+
             LblMensaje.ForeColor = System.Drawing.Color.Red
         End If
     End Sub
@@ -60,17 +65,16 @@ Public Class Formulario
             TxtNombreEmpresa.Text = row.Cells(2).Text
             TxtContacto.Text = row.Cells(3).Text
             TxtTelefono.Text = row.Cells(4).Text
-            ' Guardar el ID del proveedor seleccionado en un campo oculto o variable de sesión
+
             Dim id As Integer = Convert.ToInt32(GridView1.DataKeys(index).Value)
-
-
         End If
+        ProveedorId = Convert.ToInt32(GridView1.DataKeys(index).Value)
     End Sub
 
     Protected Sub GridView1_RowDeleted(sender As Object, e As GridViewDeletedEventArgs)
         Dim id As Integer = Convert.ToInt32(GridView1.DataKeys(e.AffectedRows).Value)
+
         Dim resultado As String = dbHelper.EliminarEmpleado(id)
-        ' Mostrar el mensaje de resultado en la etiqueta LblMensaje
         LblMensaje.Text = resultado
 
         GridView1.DataBind()
